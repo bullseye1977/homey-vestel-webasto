@@ -3,19 +3,41 @@
   "version": "1.0.0",
   "compatibility": ">=12.4.5",
   "sdk": 3,
-  "platforms": ["local"],
+  "platforms": [
+    "local"
+  ],
   "name": {
-    "en": "Vestel EVC04",
-    "nl": "Vestel EVC04"
+    "en": "Vestel EVC04 & Webasto Unite",
+    "nl": "Vestel EVC04 & Webasto Unite"
   },
   "description": {
-    "en": "Monitor and control your Vestel EVC04 charger locally over Modbus TCP, with solar charging and load balancing.",
-    "nl": "Lees je Vestel EVC04-laadpaal lokaal uit via Modbus TCP en stuur hem aan, met laden op zonne-overschot en capaciteitsbeveiliging."
+    "en": "Control your Vestel EVC04 or Webasto Unite charger locally, with solar charging and load balancing.",
+    "nl": "Bedien je Vestel EVC04 of Webasto Unite lokaal, met laden op zonne-overschot en capaciteitsbeveiliging."
   },
-  "category": ["energy"],
+  "category": [
+    "energy"
+  ],
   "tags": {
-    "en": ["ev", "charger", "vestel", "modbus", "solar", "load balancing"],
-    "nl": ["laadpaal", "elektrische auto", "vestel", "modbus", "zonnepanelen", "capaciteitsbeveiliging"]
+    "en": [
+      "ev",
+      "charger",
+      "vestel",
+      "modbus",
+      "solar",
+      "load balancing",
+      "webasto",
+      "unite"
+    ],
+    "nl": [
+      "laadpaal",
+      "elektrische auto",
+      "vestel",
+      "modbus",
+      "zonnepanelen",
+      "capaciteitsbeveiliging",
+      "webasto",
+      "unite"
+    ]
   },
   "brandColor": "#1E88E5",
   "images": {

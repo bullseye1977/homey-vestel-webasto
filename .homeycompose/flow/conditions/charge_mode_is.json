@@ -1,0 +1,52 @@
+{
+  "id": "charge_mode_is",
+  "title": {
+    "en": "Charge mode !{{is|is not}}",
+    "nl": "Laadmodus !{{is|is niet}}"
+  },
+  "titleFormatted": {
+    "en": "Charge mode !{{is|is not}} [[mode]]",
+    "nl": "Laadmodus !{{is|is niet}} [[mode]]"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=evc04|unite"
+    },
+    {
+      "name": "mode",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "fast",
+          "title": {
+            "en": "Fast",
+            "nl": "Snel"
+          }
+        },
+        {
+          "id": "min_solar",
+          "title": {
+            "en": "Minimum + solar",
+            "nl": "Minimaal + zon"
+          }
+        },
+        {
+          "id": "solar",
+          "title": {
+            "en": "Solar only",
+            "nl": "Alleen zon"
+          }
+        },
+        {
+          "id": "off",
+          "title": {
+            "en": "Off",
+            "nl": "Uit"
+          }
+        }
+      ]
+    }
+  ]
+}

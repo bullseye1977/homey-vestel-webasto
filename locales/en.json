@@ -1,14 +1,15 @@
 {
   "pair": {
     "title": "Connect your charger",
-    "intro": "Enter the IP address of your Vestel EVC04. Modbus TCP must be enabled on the charger.",
+    "intro": "Enter the IP address of your charger. Modbus TCP must be enabled on the charger.",
     "host": "IP address",
     "port": "Port",
     "unit_id": "Modbus unit ID",
     "hint": "Tip: give the charger a fixed IP address in your router. The charger accepts only one Modbus connection, so disable other Modbus apps or devices that talk to it.",
     "connect": "Connect",
     "no_host": "Please enter an IP address.",
-    "connect_failed": "Could not reach the charger: __error__"
+    "connect_failed": "Could not reach the charger: __error__",
+    "device_name": "Charger __product__"
   },
   "error": {
     "no_host": "No IP address configured",

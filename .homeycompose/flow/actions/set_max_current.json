@@ -1,0 +1,29 @@
+{
+  "id": "set_max_current",
+  "title": {
+    "en": "Set max charging current",
+    "nl": "Max. laadstroom instellen"
+  },
+  "titleFormatted": {
+    "en": "Set max charging current to [[current]] A",
+    "nl": "Max. laadstroom instellen op [[current]] A"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=evc04|unite"
+    },
+    {
+      "name": "current",
+      "type": "number",
+      "min": 6,
+      "max": 32,
+      "step": 1,
+      "placeholder": {
+        "en": "16",
+        "nl": "16"
+      }
+    }
+  ]
+}

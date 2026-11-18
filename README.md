@@ -1,6 +1,10 @@
-# Vestel EVC04 voor Homey
+# Vestel EVC04 & Webasto Unite voor Homey
 
-Homey-app (SDK 3) die een Vestel EVC04-laadpaal lokaal via **Modbus TCP** uitleest en aanstuurt.
+Homey-app (SDK 3) die een **Vestel EVC04** of **Webasto Unite** lokaal via **Modbus TCP** uitleest en aanstuurt.
+De Webasto Unite is gebouwd op de Vestel EVC04 en gebruikt dezelfde Modbus-registers (getest met de nieuwste
+Vestel-firmware). Bij het toevoegen kies je het type; beide werken identiek, alleen naam en icoon verschillen.
+
+Dit is een community-app en wordt niet gemaakt door Vestel of Webasto.
 
 ## Wat de app doet
 
@@ -72,7 +76,11 @@ npm run validate
 
 - `lib/VestelClient.js`: Modbus-registers, verbinding en heartbeat
 - `lib/ChargeController.js`: laadlogica (geen I/O, volledig getest)
-- `drivers/evc04/`: Homey-driver, apparaat, koppelscherm en flowkaarten
+- `lib/ChargerDriver.js`, `lib/ChargerDevice.js`: koppelen en apparaatlogica, gedeeld door beide types
+- `drivers/evc04/`, `drivers/unite/`: per type alleen naam, icoon, instellingen en koppelscherm
+  (instellingen en koppelscherm moeten gelijk blijven; een test bewaakt dat)
+- `.homeycompose/drivers/templates/charger.json`: gedeelde capabilities en energie-instellingen
+- `.homeycompose/flow/`: flowkaarten, voor beide types
 
 De laadpaal valt terug op zijn failsafe-stroom als hij niets meer van Homey hoort; de app stuurt daarom
 regelmatig een heartbeat (register 6000).

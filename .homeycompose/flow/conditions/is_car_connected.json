@@ -1,0 +1,14 @@
+{
+  "id": "is_car_connected",
+  "title": {
+    "en": "Car !{{is|is not}} connected",
+    "nl": "Auto !{{is|is niet}} aangesloten"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=evc04|unite"
+    }
+  ]
+}

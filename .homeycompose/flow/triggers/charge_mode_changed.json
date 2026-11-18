@@ -1,0 +1,25 @@
+{
+  "id": "charge_mode_changed",
+  "title": {
+    "en": "Charge mode changed",
+    "nl": "Laadmodus is veranderd"
+  },
+  "tokens": [
+    {
+      "name": "mode",
+      "type": "string",
+      "title": {
+        "en": "Mode",
+        "nl": "Modus"
+      },
+      "example": "solar"
+    }
+  ],
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=evc04|unite"
+    }
+  ]
+}

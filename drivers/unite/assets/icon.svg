@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 960">
+  <g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round">
+    <!-- housing -->
+    <rect x="175" y="40" width="610" height="880" rx="305" ry="360" stroke-width="34"/>
+    <!-- inner front panel -->
+    <rect x="232" y="98" width="496" height="764" rx="248" ry="300" stroke-width="16"/>
+    <!-- no display on the Unite; RFID card with waves sits a bit higher -->
+    <g transform="translate(0 -80)">
+      <rect x="462" y="352" width="36" height="42" rx="5" stroke-width="16"/>
+      <path d="M440 344 C426 358 426 388 440 402 M418 330 C396 354 396 392 418 416" stroke-width="12"/>
+      <path d="M520 344 C534 358 534 388 520 402 M542 330 C564 354 564 392 542 416" stroke-width="12"/>
+    </g>
+    <!-- charging port: one ring with the socket cover -->
+    <circle cx="480" cy="624" r="120" stroke-width="32"/>
+    <path d="M426 562 Q426 546 442 546 H518 Q534 546 534 562 V652 Q534 676 516 692 L495 707 Q480 716 465 707 L444 692 Q426 676 426 652 Z" stroke-width="20"/>
+    <path d="M426 576 H534" stroke-width="16"/>
+  </g>
+</svg>

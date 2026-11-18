@@ -1,0 +1,29 @@
+{
+  "id": "update_grid_power",
+  "title": {
+    "en": "Update grid power",
+    "nl": "Netvermogen doorgeven"
+  },
+  "titleFormatted": {
+    "en": "Grid power is [[power]] W",
+    "nl": "Netvermogen is [[power]] W"
+  },
+  "hint": {
+    "en": "Power from your P1 meter. Negative = exporting. Needed for solar charging.",
+    "nl": "Vermogen van je P1-meter. Negatief = teruglevering. Nodig voor laden op zonne-overschot."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=evc04|unite"
+    },
+    {
+      "name": "power",
+      "type": "number",
+      "placeholder": {
+        "en": "W"
+      }
+    }
+  ]
+}

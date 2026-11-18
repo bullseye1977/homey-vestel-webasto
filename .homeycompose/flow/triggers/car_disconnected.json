@@ -1,0 +1,34 @@
+{
+  "id": "car_disconnected",
+  "title": {
+    "en": "Car was disconnected",
+    "nl": "Auto is losgekoppeld"
+  },
+  "tokens": [
+    {
+      "name": "energy",
+      "type": "number",
+      "title": {
+        "en": "Session energy (kWh)",
+        "nl": "Sessie-energie (kWh)"
+      },
+      "example": 12.4
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "title": {
+        "en": "Session duration (min)",
+        "nl": "Sessieduur (min)"
+      },
+      "example": 95
+    }
+  ],
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=evc04|unite"
+    }
+  ]
+}

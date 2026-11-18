@@ -1,0 +1,45 @@
+{
+  "id": "set_phase_mode",
+  "title": {
+    "en": "Set phase switching",
+    "nl": "Fase-omschakeling instellen"
+  },
+  "titleFormatted": {
+    "en": "Set phase switching to [[mode]]",
+    "nl": "Fase-omschakeling instellen op [[mode]]"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=evc04|unite"
+    },
+    {
+      "name": "mode",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "3",
+          "title": {
+            "en": "Always 3 phases",
+            "nl": "Altijd 3 fasen"
+          }
+        },
+        {
+          "id": "auto",
+          "title": {
+            "en": "Automatic",
+            "nl": "Automatisch"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "Always 1 phase",
+            "nl": "Altijd 1 fase"
+          }
+        }
+      ]
+    }
+  ]
+}

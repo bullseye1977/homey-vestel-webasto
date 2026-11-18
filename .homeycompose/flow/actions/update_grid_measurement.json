@@ -1,0 +1,50 @@
+{
+  "id": "update_grid_measurement",
+  "title": {
+    "en": "Update grid measurement",
+    "nl": "Netmeting doorgeven"
+  },
+  "titleFormatted": {
+    "en": "Grid power [[power]] W, currents [[l1]] / [[l2]] / [[l3]] A",
+    "nl": "Netvermogen [[power]] W, stroom [[l1]] / [[l2]] / [[l3]] A"
+  },
+  "hint": {
+    "en": "Values from your P1 meter. Negative = exporting. Needed for solar charging and load balancing.",
+    "nl": "Waarden van je P1-meter. Negatief = teruglevering. Nodig voor zonneladen en capaciteitsbeveiliging."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=evc04|unite"
+    },
+    {
+      "name": "power",
+      "type": "number",
+      "placeholder": {
+        "en": "W"
+      }
+    },
+    {
+      "name": "l1",
+      "type": "number",
+      "placeholder": {
+        "en": "L1 (A)"
+      }
+    },
+    {
+      "name": "l2",
+      "type": "number",
+      "placeholder": {
+        "en": "L2 (A)"
+      }
+    },
+    {
+      "name": "l3",
+      "type": "number",
+      "placeholder": {
+        "en": "L3 (A)"
+      }
+    }
+  ]
+}
