@@ -1,0 +1,11 @@
+{
+  "type": "number",
+  "title": { "en": "Current setpoint", "nl": "Ingestelde laadstroom" },
+  "getable": true,
+  "setable": false,
+  "units": { "en": "A" },
+  "decimals": 0,
+  "uiComponent": "sensor",
+  "icon": "/assets/current.svg",
+  "insights": true
+}

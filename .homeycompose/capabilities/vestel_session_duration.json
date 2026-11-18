@@ -1,0 +1,10 @@
+{
+  "type": "number",
+  "title": { "en": "Session duration", "nl": "Sessieduur" },
+  "getable": true,
+  "setable": false,
+  "units": { "en": "min" },
+  "decimals": 0,
+  "uiComponent": "sensor",
+  "icon": "/assets/clock.svg"
+}

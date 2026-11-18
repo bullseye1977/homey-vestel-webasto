@@ -1,0 +1,28 @@
+{
+  "pair": {
+    "title": "Laadpaal koppelen",
+    "intro": "Vul het IP-adres van je Vestel EVC04 in. Modbus TCP moet op de laadpaal aan staan.",
+    "host": "IP-adres",
+    "port": "Poort",
+    "unit_id": "Modbus unit-ID",
+    "hint": "Tip: geef de laadpaal een vast IP-adres in je router. De laadpaal accepteert maar één Modbus-verbinding, dus schakel andere Modbus-apps of -apparaten die ermee praten uit.",
+    "connect": "Verbinden",
+    "no_host": "Vul een IP-adres in.",
+    "connect_failed": "Laadpaal niet bereikbaar: __error__"
+  },
+  "error": {
+    "no_host": "Geen IP-adres ingesteld",
+    "unreachable": "Laadpaal niet bereikbaar: __error__"
+  },
+  "reason": {
+    "off": "Uitgeschakeld",
+    "no_car": "Geen auto aangesloten",
+    "user_max": "Jouw max. laadstroom",
+    "solar": "Zonne-overschot",
+    "solar_waiting": "Wacht op zonne-overschot",
+    "solar_minimum": "Minimale stroom",
+    "no_grid_data": "Geen netmeting",
+    "load_balancing": "Capaciteitsbeveiliging",
+    "hardware_max": "Maximum installatie"
+  }
+}

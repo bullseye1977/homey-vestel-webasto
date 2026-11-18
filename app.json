@@ -1,0 +1,847 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "org.community.vestelevc04",
+  "version": "1.0.0",
+  "compatibility": ">=12.4.5",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Vestel EVC04",
+    "nl": "Vestel EVC04"
+  },
+  "description": {
+    "en": "Monitor and control your Vestel EVC04 charger locally over Modbus TCP, with solar charging and load balancing.",
+    "nl": "Lees je Vestel EVC04-laadpaal lokaal uit via Modbus TCP en stuur hem aan, met laden op zonne-overschot en capaciteitsbeveiliging."
+  },
+  "category": [
+    "energy"
+  ],
+  "tags": {
+    "en": [
+      "ev",
+      "charger",
+      "vestel",
+      "modbus",
+      "solar",
+      "load balancing"
+    ],
+    "nl": [
+      "laadpaal",
+      "elektrische auto",
+      "vestel",
+      "modbus",
+      "zonnepanelen",
+      "capaciteitsbeveiliging"
+    ]
+  },
+  "brandColor": "#1E88E5",
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Homey community"
+  },
+  "permissions": [],
+  "flow": {
+    "triggers": [
+      {
+        "id": "car_connected",
+        "title": {
+          "en": "Car was connected",
+          "nl": "Auto is aangesloten"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=evc04"
+          }
+        ]
+      },
+      {
+        "id": "car_disconnected",
+        "title": {
+          "en": "Car was disconnected",
+          "nl": "Auto is losgekoppeld"
+        },
+        "tokens": [
+          {
+            "name": "energy",
+            "type": "number",
+            "title": {
+              "en": "Session energy (kWh)",
+              "nl": "Sessie-energie (kWh)"
+            },
+            "example": 12.4
+          },
+          {
+            "name": "duration",
+            "type": "number",
+            "title": {
+              "en": "Session duration (min)",
+              "nl": "Sessieduur (min)"
+            },
+            "example": 95
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=evc04"
+          }
+        ]
+      },
+      {
+        "id": "charge_mode_changed",
+        "title": {
+          "en": "Charge mode changed",
+          "nl": "Laadmodus is veranderd"
+        },
+        "tokens": [
+          {
+            "name": "mode",
+            "type": "string",
+            "title": {
+              "en": "Mode",
+              "nl": "Modus"
+            },
+            "example": "solar"
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=evc04"
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "is_car_connected",
+        "title": {
+          "en": "Car !{{is|is not}} connected",
+          "nl": "Auto !{{is|is niet}} aangesloten"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=evc04"
+          }
+        ]
+      },
+      {
+        "id": "charge_mode_is",
+        "title": {
+          "en": "Charge mode !{{is|is not}}",
+          "nl": "Laadmodus !{{is|is niet}}"
+        },
+        "titleFormatted": {
+          "en": "Charge mode !{{is|is not}} [[mode]]",
+          "nl": "Laadmodus !{{is|is niet}} [[mode]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=evc04"
+          },
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "fast",
+                "title": {
+                  "en": "Fast",
+                  "nl": "Snel"
+                }
+              },
+              {
+                "id": "min_solar",
+                "title": {
+                  "en": "Minimum + solar",
+                  "nl": "Minimaal + zon"
+                }
+              },
+              {
+                "id": "solar",
+                "title": {
+                  "en": "Solar only",
+                  "nl": "Alleen zon"
+                }
+              },
+              {
+                "id": "off",
+                "title": {
+                  "en": "Off",
+                  "nl": "Uit"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_charge_mode",
+        "title": {
+          "en": "Set charge mode",
+          "nl": "Laadmodus instellen"
+        },
+        "titleFormatted": {
+          "en": "Set charge mode to [[mode]]",
+          "nl": "Laadmodus instellen op [[mode]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=evc04"
+          },
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "fast",
+                "title": {
+                  "en": "Fast",
+                  "nl": "Snel"
+                }
+              },
+              {
+                "id": "min_solar",
+                "title": {
+                  "en": "Minimum + solar",
+                  "nl": "Minimaal + zon"
+                }
+              },
+              {
+                "id": "solar",
+                "title": {
+                  "en": "Solar only",
+                  "nl": "Alleen zon"
+                }
+              },
+              {
+                "id": "off",
+                "title": {
+                  "en": "Off",
+                  "nl": "Uit"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "set_max_current",
+        "title": {
+          "en": "Set max charging current",
+          "nl": "Max. laadstroom instellen"
+        },
+        "titleFormatted": {
+          "en": "Set max charging current to [[current]] A",
+          "nl": "Max. laadstroom instellen op [[current]] A"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=evc04"
+          },
+          {
+            "name": "current",
+            "type": "number",
+            "min": 6,
+            "max": 32,
+            "step": 1,
+            "placeholder": {
+              "en": "16",
+              "nl": "16"
+            }
+          }
+        ]
+      },
+      {
+        "id": "update_grid_power",
+        "title": {
+          "en": "Update grid power",
+          "nl": "Netvermogen doorgeven"
+        },
+        "titleFormatted": {
+          "en": "Grid power is [[power]] W",
+          "nl": "Netvermogen is [[power]] W"
+        },
+        "hint": {
+          "en": "Power from your P1 meter. Negative = exporting. Needed for solar charging.",
+          "nl": "Vermogen van je P1-meter. Negatief = teruglevering. Nodig voor laden op zonne-overschot."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=evc04"
+          },
+          {
+            "name": "power",
+            "type": "number",
+            "placeholder": {
+              "en": "W"
+            }
+          }
+        ]
+      },
+      {
+        "id": "update_grid_measurement",
+        "title": {
+          "en": "Update grid measurement",
+          "nl": "Netmeting doorgeven"
+        },
+        "titleFormatted": {
+          "en": "Grid power [[power]] W, currents [[l1]] / [[l2]] / [[l3]] A",
+          "nl": "Netvermogen [[power]] W, stroom [[l1]] / [[l2]] / [[l3]] A"
+        },
+        "hint": {
+          "en": "Values from your P1 meter. Negative = exporting. Needed for solar charging and load balancing.",
+          "nl": "Waarden van je P1-meter. Negatief = teruglevering. Nodig voor zonneladen en capaciteitsbeveiliging."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=evc04"
+          },
+          {
+            "name": "power",
+            "type": "number",
+            "placeholder": {
+              "en": "W"
+            }
+          },
+          {
+            "name": "l1",
+            "type": "number",
+            "placeholder": {
+              "en": "L1 (A)"
+            }
+          },
+          {
+            "name": "l2",
+            "type": "number",
+            "placeholder": {
+              "en": "L2 (A)"
+            }
+          },
+          {
+            "name": "l3",
+            "type": "number",
+            "placeholder": {
+              "en": "L3 (A)"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "drivers": [
+    {
+      "name": {
+        "en": "Vestel EVC04",
+        "nl": "Vestel EVC04"
+      },
+      "class": "evcharger",
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "capabilities": [
+        "evcharger_charging",
+        "evcharger_charging_state",
+        "vestel_charge_mode",
+        "vestel_target_current",
+        "vestel_applied_current",
+        "vestel_limit_reason",
+        "measure_power",
+        "meter_power",
+        "meter_power.session",
+        "vestel_session_duration",
+        "measure_current.l1",
+        "measure_current.l2",
+        "measure_current.l3",
+        "measure_voltage.l1",
+        "measure_voltage.l2",
+        "measure_voltage.l3"
+      ],
+      "capabilitiesOptions": {
+        "meter_power": {
+          "title": {
+            "en": "Total energy",
+            "nl": "Totale energie"
+          }
+        },
+        "meter_power.session": {
+          "title": {
+            "en": "Session energy",
+            "nl": "Energie deze sessie"
+          },
+          "insights": false
+        },
+        "measure_current.l1": {
+          "title": {
+            "en": "Current L1",
+            "nl": "Stroom L1"
+          }
+        },
+        "measure_current.l2": {
+          "title": {
+            "en": "Current L2",
+            "nl": "Stroom L2"
+          }
+        },
+        "measure_current.l3": {
+          "title": {
+            "en": "Current L3",
+            "nl": "Stroom L3"
+          }
+        },
+        "measure_voltage.l1": {
+          "title": {
+            "en": "Voltage L1",
+            "nl": "Spanning L1"
+          }
+        },
+        "measure_voltage.l2": {
+          "title": {
+            "en": "Voltage L2",
+            "nl": "Spanning L2"
+          }
+        },
+        "measure_voltage.l3": {
+          "title": {
+            "en": "Voltage L3",
+            "nl": "Spanning L3"
+          }
+        }
+      },
+      "energy": {
+        "evCharger": true,
+        "meterPowerImportedCapability": "meter_power"
+      },
+      "images": {
+        "small": "/drivers/evc04/assets/images/small.png",
+        "large": "/drivers/evc04/assets/images/large.png",
+        "xlarge": "/drivers/evc04/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "configure"
+        }
+      ],
+      "repair": [
+        {
+          "id": "configure"
+        }
+      ],
+      "id": "evc04",
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Connection",
+            "nl": "Verbinding"
+          },
+          "children": [
+            {
+              "id": "host",
+              "type": "text",
+              "label": {
+                "en": "IP address",
+                "nl": "IP-adres"
+              },
+              "value": ""
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "label": {
+                "en": "Port",
+                "nl": "Poort"
+              },
+              "value": 502,
+              "min": 1,
+              "max": 65535
+            },
+            {
+              "id": "unitId",
+              "type": "number",
+              "label": {
+                "en": "Modbus unit ID",
+                "nl": "Modbus unit-ID"
+              },
+              "value": 255,
+              "min": 0,
+              "max": 255
+            },
+            {
+              "id": "pollInterval",
+              "type": "number",
+              "label": {
+                "en": "Poll interval",
+                "nl": "Uitleesinterval"
+              },
+              "units": {
+                "en": "s"
+              },
+              "value": 5,
+              "min": 2,
+              "max": 60
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Charger",
+            "nl": "Laadpaal"
+          },
+          "children": [
+            {
+              "id": "maxCurrent",
+              "type": "number",
+              "label": {
+                "en": "Maximum current of the installation",
+                "nl": "Maximale stroom van de installatie"
+              },
+              "hint": {
+                "en": "Never charge above this, whatever mode or flow asks for.",
+                "nl": "Er wordt nooit harder geladen dan dit, wat een modus of flow ook vraagt."
+              },
+              "units": {
+                "en": "A"
+              },
+              "value": 16,
+              "min": 6,
+              "max": 32
+            },
+            {
+              "id": "minCurrent",
+              "type": "number",
+              "label": {
+                "en": "Minimum current",
+                "nl": "Minimale stroom"
+              },
+              "hint": {
+                "en": "Below this the charger pauses. 6 A is the EV standard minimum.",
+                "nl": "Daaronder pauzeert de laadpaal. 6 A is het minimum van de laadstandaard."
+              },
+              "units": {
+                "en": "A"
+              },
+              "value": 6,
+              "min": 6,
+              "max": 16
+            },
+            {
+              "id": "phases",
+              "type": "dropdown",
+              "label": {
+                "en": "Phases (fallback)",
+                "nl": "Fasen (terugval)"
+              },
+              "hint": {
+                "en": "Used for solar calculations when the number of phases can't be measured yet.",
+                "nl": "Gebruikt voor de zonneberekening zolang het aantal fasen nog niet gemeten kan worden."
+              },
+              "value": "3",
+              "values": [
+                {
+                  "id": "1",
+                  "label": {
+                    "en": "1 phase",
+                    "nl": "1 fase"
+                  }
+                },
+                {
+                  "id": "3",
+                  "label": {
+                    "en": "3 phases",
+                    "nl": "3 fasen"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Solar charging",
+            "nl": "Laden op zonne-overschot"
+          },
+          "children": [
+            {
+              "id": "solarBufferW",
+              "type": "number",
+              "label": {
+                "en": "Reserve",
+                "nl": "Reserve"
+              },
+              "hint": {
+                "en": "Keep this much power exported so you don't import from the grid.",
+                "nl": "Houd zoveel vermogen over als teruglevering, zodat je niets van het net haalt."
+              },
+              "units": {
+                "en": "W"
+              },
+              "value": 100,
+              "min": -2000,
+              "max": 2000
+            },
+            {
+              "id": "solarStartDelayS",
+              "type": "number",
+              "label": {
+                "en": "Start delay",
+                "nl": "Startvertraging"
+              },
+              "units": {
+                "en": "s"
+              },
+              "value": 120,
+              "min": 0,
+              "max": 1800
+            },
+            {
+              "id": "solarStopDelayS",
+              "type": "number",
+              "label": {
+                "en": "Stop delay",
+                "nl": "Stopvertraging"
+              },
+              "units": {
+                "en": "s"
+              },
+              "value": 300,
+              "min": 0,
+              "max": 3600
+            },
+            {
+              "id": "solarAdjustIntervalS",
+              "type": "number",
+              "label": {
+                "en": "Adjust at most every",
+                "nl": "Hoogstens aanpassen elke"
+              },
+              "units": {
+                "en": "s"
+              },
+              "value": 30,
+              "min": 5,
+              "max": 600
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Load balancing",
+            "nl": "Capaciteitsbeveiliging"
+          },
+          "children": [
+            {
+              "id": "loadBalancing",
+              "type": "checkbox",
+              "label": {
+                "en": "Enabled",
+                "nl": "Ingeschakeld"
+              },
+              "hint": {
+                "en": "Needs the 'Update grid measurement' flow card with currents per phase.",
+                "nl": "Heeft de flowkaart 'Netmeting doorgeven' met stroom per fase nodig."
+              },
+              "value": false
+            },
+            {
+              "id": "mainFuseA",
+              "type": "number",
+              "label": {
+                "en": "Main fuse per phase",
+                "nl": "Hoofdzekering per fase"
+              },
+              "hint": {
+                "en": "Use a value slightly below your real fuse for margin, e.g. 23 for a 3x25A connection.",
+                "nl": "Neem iets minder dan je echte zekering als marge, bijvoorbeeld 23 bij een 3x25A-aansluiting."
+              },
+              "units": {
+                "en": "A"
+              },
+              "value": 23,
+              "min": 6,
+              "max": 80
+            },
+            {
+              "id": "gridTimeoutS",
+              "type": "number",
+              "label": {
+                "en": "Grid data timeout",
+                "nl": "Time-out netmeting"
+              },
+              "hint": {
+                "en": "Without fresh grid data, solar mode pauses and load balancing falls back to the minimum current.",
+                "nl": "Zonder verse netmeting pauzeert zonneladen en valt capaciteitsbeveiliging terug op de minimale stroom."
+              },
+              "units": {
+                "en": "s"
+              },
+              "value": 60,
+              "min": 10,
+              "max": 600
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Information",
+            "nl": "Informatie"
+          },
+          "children": [
+            {
+              "id": "serial",
+              "type": "label",
+              "label": {
+                "en": "Serial number",
+                "nl": "Serienummer"
+              },
+              "value": ""
+            },
+            {
+              "id": "firmware",
+              "type": "label",
+              "label": {
+                "en": "Firmware",
+                "nl": "Firmware"
+              },
+              "value": ""
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "capabilities": {
+    "vestel_applied_current": {
+      "type": "number",
+      "title": {
+        "en": "Current setpoint",
+        "nl": "Ingestelde laadstroom"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "A"
+      },
+      "decimals": 0,
+      "uiComponent": "sensor",
+      "icon": "/assets/current.svg",
+      "insights": true
+    },
+    "vestel_charge_mode": {
+      "type": "enum",
+      "title": {
+        "en": "Charge mode",
+        "nl": "Laadmodus"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "picker",
+      "icon": "/assets/mode.svg",
+      "values": [
+        {
+          "id": "fast",
+          "title": {
+            "en": "Fast",
+            "nl": "Snel"
+          }
+        },
+        {
+          "id": "min_solar",
+          "title": {
+            "en": "Minimum + solar",
+            "nl": "Minimaal + zon"
+          }
+        },
+        {
+          "id": "solar",
+          "title": {
+            "en": "Solar only",
+            "nl": "Alleen zon"
+          }
+        },
+        {
+          "id": "off",
+          "title": {
+            "en": "Off",
+            "nl": "Uit"
+          }
+        }
+      ]
+    },
+    "vestel_limit_reason": {
+      "type": "string",
+      "title": {
+        "en": "Limited by",
+        "nl": "Begrensd door"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/info.svg"
+    },
+    "vestel_session_duration": {
+      "type": "number",
+      "title": {
+        "en": "Session duration",
+        "nl": "Sessieduur"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "min"
+      },
+      "decimals": 0,
+      "uiComponent": "sensor",
+      "icon": "/assets/clock.svg"
+    },
+    "vestel_target_current": {
+      "type": "number",
+      "title": {
+        "en": "Max charging current",
+        "nl": "Max. laadstroom"
+      },
+      "getable": true,
+      "setable": true,
+      "units": {
+        "en": "A"
+      },
+      "min": 6,
+      "max": 32,
+      "step": 1,
+      "decimals": 0,
+      "uiComponent": "slider",
+      "icon": "/assets/current.svg"
+    }
+  }
+}

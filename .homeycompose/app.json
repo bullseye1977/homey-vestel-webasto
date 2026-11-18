@@ -1,0 +1,30 @@
+{
+  "id": "org.community.vestelevc04",
+  "version": "1.0.0",
+  "compatibility": ">=12.4.5",
+  "sdk": 3,
+  "platforms": ["local"],
+  "name": {
+    "en": "Vestel EVC04",
+    "nl": "Vestel EVC04"
+  },
+  "description": {
+    "en": "Monitor and control your Vestel EVC04 charger locally over Modbus TCP, with solar charging and load balancing.",
+    "nl": "Lees je Vestel EVC04-laadpaal lokaal uit via Modbus TCP en stuur hem aan, met laden op zonne-overschot en capaciteitsbeveiliging."
+  },
+  "category": ["energy"],
+  "tags": {
+    "en": ["ev", "charger", "vestel", "modbus", "solar", "load balancing"],
+    "nl": ["laadpaal", "elektrische auto", "vestel", "modbus", "zonnepanelen", "capaciteitsbeveiliging"]
+  },
+  "brandColor": "#1E88E5",
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Homey community"
+  },
+  "permissions": []
+}

@@ -1,0 +1,8 @@
+{
+  "type": "string",
+  "title": { "en": "Limited by", "nl": "Begrensd door" },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/info.svg"
+}

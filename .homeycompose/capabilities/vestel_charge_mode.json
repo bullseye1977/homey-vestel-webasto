@@ -1,0 +1,14 @@
+{
+  "type": "enum",
+  "title": { "en": "Charge mode", "nl": "Laadmodus" },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "picker",
+  "icon": "/assets/mode.svg",
+  "values": [
+    { "id": "fast", "title": { "en": "Fast", "nl": "Snel" } },
+    { "id": "min_solar", "title": { "en": "Minimum + solar", "nl": "Minimaal + zon" } },
+    { "id": "solar", "title": { "en": "Solar only", "nl": "Alleen zon" } },
+    { "id": "off", "title": { "en": "Off", "nl": "Uit" } }
+  ]
+}

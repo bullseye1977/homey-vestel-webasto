@@ -1,0 +1,13 @@
+{
+  "type": "number",
+  "title": { "en": "Max charging current", "nl": "Max. laadstroom" },
+  "getable": true,
+  "setable": true,
+  "units": { "en": "A" },
+  "min": 6,
+  "max": 32,
+  "step": 1,
+  "decimals": 0,
+  "uiComponent": "slider",
+  "icon": "/assets/current.svg"
+}

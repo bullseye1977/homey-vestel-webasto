@@ -1,0 +1,67 @@
+<header class="homey-header">
+  <h1 class="homey-title" data-i18n="pair.title"></h1>
+  <p class="homey-subtitle" data-i18n="pair.intro"></p>
+</header>
+
+<form class="homey-form" id="form" onsubmit="return false;">
+  <div class="homey-form-group">
+    <label class="homey-form-label" for="host" data-i18n="pair.host"></label>
+    <input class="homey-form-input" id="host" type="text" placeholder="192.168.1.50" autocomplete="off" />
+  </div>
+  <div class="homey-form-group">
+    <label class="homey-form-label" for="port" data-i18n="pair.port"></label>
+    <input class="homey-form-input" id="port" type="number" value="502" />
+  </div>
+  <div class="homey-form-group">
+    <label class="homey-form-label" for="unitId" data-i18n="pair.unit_id"></label>
+    <input class="homey-form-input" id="unitId" type="number" value="255" />
+  </div>
+  <p class="homey-form-help" data-i18n="pair.hint"></p>
+  <p id="error" style="color: var(--homey-color-red-500, #d32f2f);"></p>
+</form>
+
+<button class="homey-button-primary-full" id="submit" data-i18n="pair.connect"></button>
+
+<script type="application/javascript">
+  (function () {
+    var hostEl = document.getElementById('host');
+    var portEl = document.getElementById('port');
+    var unitEl = document.getElementById('unitId');
+    var errorEl = document.getElementById('error');
+    var button = document.getElementById('submit');
+    var isRepair = false;
+
+    // Only the repair session knows 'get_current'; use it to prefill and to detect repair mode.
+    Homey.emit('get_current')
+      .then(function (settings) {
+        isRepair = true;
+        hostEl.value = settings.host || '';
+        portEl.value = settings.port || 502;
+        unitEl.value = settings.unitId || 255;
+      })
+      .catch(function () { /* pairing a new device */ });
+
+    button.addEventListener('click', function () {
+      errorEl.textContent = '';
+      button.classList.add('is-loading');
+      button.disabled = true;
+
+      Homey.emit('connect', {
+        host: hostEl.value,
+        port: Number(portEl.value) || 502,
+        unitId: Number(unitEl.value) || 255,
+      })
+        .then(function (device) {
+          if (isRepair) return Homey.done();
+          return Homey.createDevice(device).then(function () { Homey.done(); });
+        })
+        .catch(function (err) {
+          errorEl.textContent = (err && err.message) || String(err);
+        })
+        .finally(function () {
+          button.classList.remove('is-loading');
+          button.disabled = false;
+        });
+    });
+  })();
+</script>
