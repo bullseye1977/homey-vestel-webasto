@@ -1,5 +1,5 @@
 {
-  "id": "org.community.vestelevc04",
+  "id": "com.github.bullseye1977.vestelunite",
   "version": "1.0.0",
   "compatibility": ">=12.4.5",
   "sdk": 3,
@@ -46,7 +46,7 @@
     "xlarge": "/assets/images/xlarge.png"
   },
   "author": {
-    "name": "Homey community"
+    "name": "Wesley"
   },
   "permissions": []
 }

@@ -1,5 +1,5 @@
 {
-  "name": "org.community.vestelevc04",
+  "name": "com.github.bullseye1977.vestelunite",
   "version": "1.0.0",
   "private": true,
   "description": "Homey app for the Vestel EVC04 EV charger (Modbus TCP)",
