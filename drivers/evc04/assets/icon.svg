@@ -1,1 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 960"><rect x="290" y="120" width="300" height="720" rx="60" fill="none" stroke="#000" stroke-width="50"/><rect x="350" y="200" width="180" height="140" rx="20" fill="none" stroke="#000" stroke-width="40"/><path d="M470 420 L400 560 H470 L430 700 L530 530 H460 L500 420 Z" fill="#000"/><path d="M590 600 H690 Q740 600 740 650 V780" fill="none" stroke="#000" stroke-width="40" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 960">
+  <g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round">
+    <!-- wall plate seen from the side -->
+    <path d="M600 128 C740 190 790 330 790 480 C790 630 740 770 600 832" stroke-width="30"/>
+    <!-- front housing -->
+    <rect x="170" y="40" width="500" height="880" rx="250" ry="330" stroke-width="34"/>
+    <!-- inner front panel -->
+    <rect x="225" y="112" width="390" height="736" rx="195" ry="260" stroke-width="20"/>
+    <!-- display with battery -->
+    <rect x="292" y="196" width="256" height="158" rx="22" stroke-width="24"/>
+    <rect x="362" y="248" width="100" height="54" rx="8" stroke-width="18"/>
+    <path d="M478 262 V288" stroke-width="18"/>
+    <!-- RFID card with waves -->
+    <rect x="401" y="414" width="38" height="44" rx="5" stroke-width="16"/>
+    <path d="M378 404 C362 420 362 452 378 468 M354 388 C330 414 330 458 354 484" stroke-width="12"/>
+    <path d="M462 404 C478 420 478 452 462 468 M486 388 C510 414 510 458 486 484" stroke-width="12"/>
+    <!-- type 2 socket -->
+    <circle cx="420" cy="672" r="132" stroke-width="26"/>
+    <circle cx="420" cy="672" r="84" stroke-width="20"/>
+    <circle cx="420" cy="672" r="36" stroke-width="18"/>
+  </g>
+  <circle cx="420" cy="694" r="10" fill="#000"/>
+</svg>
