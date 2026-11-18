@@ -273,6 +273,51 @@
         ]
       },
       {
+        "id": "set_phase_mode",
+        "title": {
+          "en": "Set phase switching",
+          "nl": "Fase-omschakeling instellen"
+        },
+        "titleFormatted": {
+          "en": "Set phase switching to [[mode]]",
+          "nl": "Fase-omschakeling instellen op [[mode]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=evc04"
+          },
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "3",
+                "title": {
+                  "en": "Always 3 phases",
+                  "nl": "Altijd 3 fasen"
+                }
+              },
+              {
+                "id": "auto",
+                "title": {
+                  "en": "Automatic",
+                  "nl": "Automatisch"
+                }
+              },
+              {
+                "id": "1",
+                "title": {
+                  "en": "Always 1 phase",
+                  "nl": "Altijd 1 fase"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
         "id": "update_grid_power",
         "title": {
           "en": "Update grid power",
@@ -377,6 +422,7 @@
         "meter_power",
         "meter_power.session",
         "vestel_session_duration",
+        "vestel_phases",
         "measure_current.l1",
         "measure_current.l2",
         "measure_current.l3",
@@ -525,8 +571,8 @@
                 "nl": "Maximale stroom van de installatie"
               },
               "hint": {
-                "en": "Never charge above this, whatever mode or flow asks for.",
-                "nl": "Er wordt nooit harder geladen dan dit, wat een modus of flow ook vraagt."
+                "en": "Never charge above this, whatever mode or flow asks for. Filled in from the charger when pairing; the charger's own maximum always applies on top.",
+                "nl": "Er wordt nooit harder geladen dan dit, wat een modus of flow ook vraagt. Wordt bij het koppelen uit de laadpaal overgenomen; het maximum van de laadpaal zelf geldt altijd."
               },
               "units": {
                 "en": "A"
@@ -581,6 +627,78 @@
                   }
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Phases",
+            "nl": "Fasen"
+          },
+          "children": [
+            {
+              "id": "phaseMode",
+              "type": "dropdown",
+              "label": {
+                "en": "Phase switching",
+                "nl": "Fase-omschakeling"
+              },
+              "hint": {
+                "en": "Automatic: Fast charges on 3 phases; solar modes switch to 1 phase when there is too little surplus for 3 phases (about 4.1 kW), so charging can start from about 1.4 kW. Charging pauses briefly while switching. Needs a 3-phase charger with firmware 3.187.0 or newer.",
+                "nl": "Automatisch: Snel laadt op 3 fasen; de zonnemodi schakelen naar 1 fase als het overschot te klein is voor 3 fasen (ongeveer 4,1 kW), zodat laden al vanaf ongeveer 1,4 kW kan. Tijdens het omschakelen pauzeert het laden even. Vereist een driefasige laadpaal met firmware 3.187.0 of nieuwer."
+              },
+              "value": "3",
+              "values": [
+                {
+                  "id": "3",
+                  "label": {
+                    "en": "Always 3 phases",
+                    "nl": "Altijd 3 fasen"
+                  }
+                },
+                {
+                  "id": "auto",
+                  "label": {
+                    "en": "Automatic",
+                    "nl": "Automatisch"
+                  }
+                },
+                {
+                  "id": "1",
+                  "label": {
+                    "en": "Always 1 phase",
+                    "nl": "Altijd 1 fase"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "phaseSwitchDelayS",
+              "type": "number",
+              "label": {
+                "en": "Switch delay",
+                "nl": "Omschakelvertraging"
+              },
+              "hint": {
+                "en": "The surplus must stay above or below the 3-phase threshold this long before switching. At most one switch per 10 minutes.",
+                "nl": "Het overschot moet zo lang boven of onder de grens voor 3 fasen blijven voordat er wordt omgeschakeld. Hoogstens één keer per 10 minuten."
+              },
+              "units": {
+                "en": "s"
+              },
+              "value": 300,
+              "min": 60,
+              "max": 3600
+            },
+            {
+              "id": "phaseSwitchSupport",
+              "type": "label",
+              "label": {
+                "en": "Supported by this charger",
+                "nl": "Ondersteund door deze laadpaal"
+              },
+              "value": ""
             }
           ]
         },
@@ -735,6 +853,15 @@
                 "nl": "Firmware"
               },
               "value": ""
+            },
+            {
+              "id": "evseMaxCurrent",
+              "type": "label",
+              "label": {
+                "en": "Charger maximum (read from charger)",
+                "nl": "Maximum laadpaal (uitgelezen)"
+              },
+              "value": ""
             }
           ]
         }
@@ -809,6 +936,19 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/assets/info.svg"
+    },
+    "vestel_phases": {
+      "type": "number",
+      "title": {
+        "en": "Phases",
+        "nl": "Fasen"
+      },
+      "getable": true,
+      "setable": false,
+      "decimals": 0,
+      "uiComponent": "sensor",
+      "icon": "/assets/phases.svg",
+      "insights": true
     },
     "vestel_session_duration": {
       "type": "number",

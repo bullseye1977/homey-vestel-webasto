@@ -23,6 +23,11 @@
     "solar_minimum": "Minimum current",
     "no_grid_data": "No grid data",
     "load_balancing": "Load balancing",
-    "hardware_max": "Installation maximum"
+    "hardware_max": "Installation maximum",
+    "phase_switching": "Switching phases"
+  },
+  "phase": {
+    "supported": "Yes",
+    "not_supported": "Phase switching is not supported by this charger (needs a 3-phase charger with firmware 3.187.0 or newer)."
   }
 }

@@ -1,0 +1,10 @@
+{
+  "type": "number",
+  "title": { "en": "Phases", "nl": "Fasen" },
+  "getable": true,
+  "setable": false,
+  "decimals": 0,
+  "uiComponent": "sensor",
+  "icon": "/assets/phases.svg",
+  "insights": true
+}

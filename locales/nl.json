@@ -23,6 +23,11 @@
     "solar_minimum": "Minimale stroom",
     "no_grid_data": "Geen netmeting",
     "load_balancing": "Capaciteitsbeveiliging",
-    "hardware_max": "Maximum installatie"
+    "hardware_max": "Maximum installatie",
+    "phase_switching": "Fasen omschakelen"
+  },
+  "phase": {
+    "supported": "Ja",
+    "not_supported": "Deze laadpaal ondersteunt geen fase-omschakeling (vereist een driefasige laadpaal met firmware 3.187.0 of nieuwer)."
   }
 }

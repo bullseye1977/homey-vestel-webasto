@@ -2,7 +2,7 @@
 
 const Homey = require('homey');
 const { VestelClient } = require('../../lib/VestelClient');
-const { ChargeController, MODES } = require('../../lib/ChargeController');
+const { ChargeController, MODES, PHASE_MODES } = require('../../lib/ChargeController');
 
 const CAPABILITIES = [
   'evcharger_charging',
@@ -15,6 +15,7 @@ const CAPABILITIES = [
   'meter_power',
   'meter_power.session',
   'vestel_session_duration',
+  'vestel_phases',
   'measure_current.l1',
   'measure_current.l2',
   'measure_current.l3',
@@ -26,6 +27,21 @@ const CAPABILITIES = [
 const CONNECTION_KEYS = ['host', 'port', 'unitId'];
 const MAX_FAILURES = 3;
 const REASSERT_MS = 60 * 1000;
+const PHASE_PAUSE_TIMEOUT_MS = 20 * 1000; // wait this long for the car to stop before switching
+const PHASE_SETTLE_MS = 10 * 1000; // stay paused this long after switching
+const PHASE_SWITCH_TIMEOUT_MS = 60 * 1000;
+const PHASE_RETRY_MS = 10 * 60 * 1000;
+const PHASE_SWITCH_MIN_FIRMWARE = [3, 187, 0];
+
+function firmwareAtLeast(firmware, min) {
+  const m = /(\d+)\.(\d+)\.(\d+)/.exec(firmware || '');
+  if (!m) return false;
+  const v = m.slice(1, 4).map(Number);
+  for (let i = 0; i < 3; i++) {
+    if (v[i] !== min[i]) return v[i] > min[i];
+  }
+  return true;
+}
 
 class Evc04Device extends Homey.Device {
 
@@ -38,6 +54,10 @@ class Evc04Device extends Homey.Device {
     this.polling = false;
     this.lastWritten = null;
     this.lastWriteAt = 0;
+    this.evseMax = null; // max current configured in the charger (register 1104)
+    this.phaseSwitch = false; // charger can switch between 1 and 3 phases
+    this.switching = null;
+    this.phaseRetryAfter = 0;
 
     for (const cap of CAPABILITIES) {
       if (!this.hasCapability(cap)) await this.addCapability(cap).catch(this.error);
@@ -65,10 +85,19 @@ class Evc04Device extends Homey.Device {
     await this._start();
   }
 
+  /** Installation max from settings, never above what the charger itself allows. */
+  _effectiveMax(s) {
+    const configured = Number(s.maxCurrent) || 16;
+    return this.evseMax ? Math.min(configured, this.evseMax) : configured;
+  }
+
   _controllerSettings(s) {
     return {
       minCurrent: Number(s.minCurrent) || 6,
-      maxCurrent: Number(s.maxCurrent) || 16,
+      maxCurrent: this._effectiveMax(s),
+      phaseSwitchAvailable: this.phaseSwitch,
+      phaseMode: PHASE_MODES.includes(s.phaseMode) ? s.phaseMode : '3',
+      phaseSwitchDelayS: Number(s.phaseSwitchDelayS) || 300,
       phases: Number(s.phases) || 3,
       solarBufferW: Number(s.solarBufferW) || 0,
       solarStartDelayS: Number(s.solarStartDelayS) || 0,
@@ -82,7 +111,7 @@ class Evc04Device extends Homey.Device {
 
   async _updateTargetCurrentRange(settings) {
     const min = Number(settings.minCurrent) || 6;
-    const max = Number(settings.maxCurrent) || 16;
+    const max = this._effectiveMax(settings);
     await this.setCapabilityOptions('vestel_target_current', { min, max, step: 1 }).catch(this.error);
     const current = this.getCapabilityValue('vestel_target_current');
     if (current > max || current < min) {
@@ -114,8 +143,25 @@ class Evc04Device extends Homey.Device {
       const updates = {};
       if (info.serial && info.serial !== settings.serial) updates.serial = info.serial;
       if (info.firmware && info.firmware !== settings.firmware) updates.firmware = info.firmware;
+
+      if (info.evseMaxCurrent >= 6 && info.evseMaxCurrent <= 80) {
+        this.evseMax = info.evseMaxCurrent;
+        const label = `${info.evseMaxCurrent} A`;
+        if (settings.evseMaxCurrent !== label) updates.evseMaxCurrent = label;
+        if (Number(settings.maxCurrent) > this.evseMax) {
+          this.log(`Installation max ${settings.maxCurrent} A is above the charger's own max ${this.evseMax} A; using ${this.evseMax} A`);
+        }
+      }
+
+      this.phaseSwitch = Boolean(info.threePhase && (info.phaseSetting === 1 || info.phaseSetting === 3)
+        && firmwareAtLeast(info.firmware, PHASE_SWITCH_MIN_FIRMWARE));
+      const phaseLabel = this.homey.__(this.phaseSwitch ? 'phase.supported' : 'phase.not_supported');
+      if (settings.phaseSwitchSupport !== phaseLabel) updates.phaseSwitchSupport = phaseLabel;
+
       if (Object.keys(updates).length) await this.setSettings(updates).catch(this.error);
-      this.log('Charger info', info);
+      this.log('Charger info', info, `phase switching ${this.phaseSwitch ? 'available' : 'not available'}`);
+      this.controller.updateSettings(this._controllerSettings(this.getSettings()));
+      await this._updateTargetCurrentRange(this.getSettings());
     } catch (err) {
       this.error('Could not read charger info, will keep retrying', err.message);
     }
@@ -143,6 +189,7 @@ class Evc04Device extends Homey.Device {
     this._createClient(this.getSettings());
     this.controller.reset();
     this.lastWritten = null;
+    this.switching = null;
     await this._start();
   }
 
@@ -150,17 +197,20 @@ class Evc04Device extends Homey.Device {
     if (this.polling) return;
     this.polling = true;
     try {
-      const status = await this.client.readStatus();
+      const status = await this.client.readStatus({ phaseSwitch: this.phaseSwitch });
       this.failures = 0;
       if (!this.getAvailable()) await this.setAvailable().catch(this.error);
 
-      const decision = this.controller.decide({
+      let decision = this.controller.decide({
         now: Date.now(),
         mode: this.getCapabilityValue('vestel_charge_mode'),
         userMax: this.getCapabilityValue('vestel_target_current'),
         charger: status,
         grid: this.grid,
       });
+      if (await this._handlePhaseSwitch(status, decision.wantedPhases)) {
+        decision = { ...decision, current: 0, reason: 'phase_switching' };
+      }
 
       // Write on change, and re-assert once a minute in case the charger restarted.
       // Don't compare with the read-back value: some firmware reports 6 A after we write 0 A.
@@ -187,6 +237,54 @@ class Evc04Device extends Homey.Device {
     }
   }
 
+  /**
+   * Switch between 1 and 3 phases safely: pause, wait until the car stopped, switch,
+   * stay paused a few seconds, then let normal control resume.
+   * @returns {boolean} true while a switch is in progress (charging must stay paused)
+   */
+  async _handlePhaseSwitch(status, wanted) {
+    if (!this.phaseSwitch) return false;
+    const now = Date.now();
+    const sw = this.switching;
+
+    if (sw) {
+      if (sw.stage === 'pausing') {
+        if (!status.charging || now - sw.since > PHASE_PAUSE_TIMEOUT_MS) {
+          await this.client.setPhases(sw.target);
+          this.log(`Phase switch: charger set to ${sw.target} phase(s)`);
+          this.switching = { ...sw, stage: 'settling', since: now };
+        }
+        return true;
+      }
+      if (status.phaseSetting === sw.target && now - sw.since >= PHASE_SETTLE_MS) {
+        this.log(`Phase switch to ${sw.target} phase(s) done`);
+        this.switching = null;
+        this.controller.phasesSwitched(now);
+        return false;
+      }
+      if (now - sw.since > PHASE_SWITCH_TIMEOUT_MS) {
+        this.error(`Phase switch to ${sw.target} did not take effect (charger reports ${status.phaseSetting}); retrying in 10 min`);
+        this.switching = null;
+        this.phaseRetryAfter = now + PHASE_RETRY_MS;
+        this.controller.phasesSwitched(now);
+        return false;
+      }
+      return true;
+    }
+
+    if (!wanted || !status.phaseSetting || wanted === status.phaseSetting || now < this.phaseRetryAfter) return false;
+
+    if (!status.carConnected) {
+      // Nothing is charging, so switch right away.
+      this.log(`Phase switch (no car): ${status.phaseSetting} -> ${wanted} phase(s)`);
+      await this.client.setPhases(wanted);
+      return false;
+    }
+    this.log(`Phase switch: ${status.phaseSetting} -> ${wanted} phase(s), pausing charging first`);
+    this.switching = { target: wanted, stage: 'pausing', since: now };
+    return true;
+  }
+
   async _publish(status, decision) {
     let state = 'plugged_out';
     if (status.carConnected) {
@@ -204,6 +302,7 @@ class Evc04Device extends Homey.Device {
       meter_power: status.meterKwh,
       'meter_power.session': status.sessionKwh,
       vestel_session_duration: Math.round(status.sessionSeconds / 60),
+      vestel_phases: decision.phases,
       'measure_current.l1': status.currents[0],
       'measure_current.l2': status.currents[1],
       'measure_current.l3': status.currents[2],
@@ -247,8 +346,16 @@ class Evc04Device extends Homey.Device {
 
   async setTargetCurrent(value, { fromUi = false } = {}) {
     const s = this.getSettings();
-    const amps = Math.round(Math.min(Number(s.maxCurrent) || 16, Math.max(Number(s.minCurrent) || 6, Number(value))));
+    const amps = Math.round(Math.min(this._effectiveMax(s), Math.max(Number(s.minCurrent) || 6, Number(value))));
     if (!fromUi || amps !== value) await this.setCapabilityValue('vestel_target_current', amps);
+    this.homey.setTimeout(() => this._poll(), 100);
+  }
+
+  async setPhaseMode(mode) {
+    if (!PHASE_MODES.includes(mode)) throw new Error(`Unknown phase mode ${mode}`);
+    if (!this.phaseSwitch && mode !== '3') throw new Error(this.homey.__('phase.not_supported'));
+    await this.setSettings({ phaseMode: mode });
+    this.controller.updateSettings(this._controllerSettings(this.getSettings()));
     this.homey.setTimeout(() => this._poll(), 100);
   }
 
@@ -262,6 +369,9 @@ class Evc04Device extends Homey.Device {
   }
 
   async onSettings({ newSettings, changedKeys }) {
+    if (changedKeys.includes('phaseMode') && newSettings.phaseMode !== '3' && !this.phaseSwitch) {
+      throw new Error(this.homey.__('phase.not_supported'));
+    }
     this.controller.updateSettings(this._controllerSettings(newSettings));
     if (changedKeys.includes('minCurrent') || changedKeys.includes('maxCurrent')) {
       // Settings are saved after this returns, so pass the new values explicitly.

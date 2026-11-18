@@ -23,6 +23,9 @@ class Evc04Driver extends Homey.Driver {
     this.homey.flow.getActionCard('set_max_current')
       .registerRunListener(({ device, current }) => device.setTargetCurrent(current));
 
+    this.homey.flow.getActionCard('set_phase_mode')
+      .registerRunListener(({ device, mode }) => device.setPhaseMode(mode));
+
     this.homey.flow.getActionCard('update_grid_power')
       .registerRunListener(({ device, power }) => device.updateGrid({ power }));
 
@@ -63,6 +66,8 @@ class Evc04Driver extends Homey.Driver {
           serial: info.serial || '',
           firmware: info.firmware || '',
           phases: info.threePhase === false ? '1' : '3',
+          maxCurrent: info.evseMaxCurrent >= 6 && info.evseMaxCurrent <= 32 ? info.evseMaxCurrent : 16,
+          evseMaxCurrent: info.evseMaxCurrent ? `${info.evseMaxCurrent} A` : '',
         },
       };
     });
