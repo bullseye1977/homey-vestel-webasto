@@ -31,15 +31,16 @@
     var button = document.getElementById('submit');
     var isRepair = false;
 
-    // Only the repair session knows 'get_current'; use it to prefill and to detect repair mode.
+    // Pairing returns null here, repair returns the current settings.
     Homey.emit('get_current')
       .then(function (settings) {
+        if (!settings || !settings.host) return;
         isRepair = true;
-        hostEl.value = settings.host || '';
+        hostEl.value = settings.host;
         portEl.value = settings.port || 502;
         unitEl.value = settings.unitId || 255;
       })
-      .catch(function () { /* pairing a new device */ });
+      .catch(function () { /* treat as pairing a new device */ });
 
     button.addEventListener('click', function () {
       errorEl.textContent = '';
@@ -51,9 +52,9 @@
         port: Number(portEl.value) || 502,
         unitId: Number(unitEl.value) || 255,
       })
-        .then(function (device) {
-          if (isRepair) return Homey.done();
-          return Homey.createDevice(device).then(function () { Homey.done(); });
+        .then(function (result) {
+          if (isRepair || (result && result.repaired)) return Homey.done();
+          return Homey.createDevice(result).then(function () { Homey.done(); });
         })
         .catch(function (err) {
           errorEl.textContent = (err && err.message) || String(err);

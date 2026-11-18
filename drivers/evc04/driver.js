@@ -47,8 +47,11 @@ class Evc04Driver extends Homey.Driver {
   }
 
   async onPair(session) {
+    session.setHandler('get_current', async () => null);
     session.setHandler('connect', async ({ host, port, unitId }) => {
+      this.log(`Pairing: probing ${host}:${port} (unit ${unitId})`);
       const info = await this._probe({ host, port, unitId });
+      this.log('Pairing: charger found', info);
       const id = info.serial || `${host.trim()}:${port}`;
       return {
         name: info.model ? `Laadpaal ${info.brand || 'Vestel'} ${info.model}`.trim() : 'Laadpaal Vestel EVC04',
