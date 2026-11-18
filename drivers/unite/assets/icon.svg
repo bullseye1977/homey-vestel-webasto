@@ -12,7 +12,7 @@
     </g>
     <!-- charging port: one ring with the socket cover -->
     <circle cx="480" cy="624" r="120" stroke-width="32"/>
-    <path d="M426 562 Q426 546 442 546 H518 Q534 546 534 562 V652 A54 54 0 0 1 426 652 Z" stroke-width="20"/>
-    <path d="M426 576 H534" stroke-width="16"/>
+    <path d="M440 548 C462 542 498 542 520 548 C540 554 546 590 544 626 C542 676 516 708 480 708 C444 708 418 676 416 626 C414 590 420 554 440 548 Z" stroke-width="20"/>
+    <path d="M421 580 Q480 572 539 580" stroke-width="16"/>
   </g>
 </svg>
