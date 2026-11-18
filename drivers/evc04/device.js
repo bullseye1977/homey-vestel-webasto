@@ -25,6 +25,7 @@ const CAPABILITIES = [
 
 const CONNECTION_KEYS = ['host', 'port', 'unitId'];
 const MAX_FAILURES = 3;
+const REASSERT_MS = 60 * 1000;
 
 class Evc04Device extends Homey.Device {
 
@@ -35,6 +36,8 @@ class Evc04Device extends Homey.Device {
     this.pollTimer = null;
     this.heartbeatTimer = null;
     this.polling = false;
+    this.lastWritten = null;
+    this.lastWriteAt = 0;
 
     for (const cap of CAPABILITIES) {
       if (!this.hasCapability(cap)) await this.addCapability(cap).catch(this.error);
@@ -139,6 +142,7 @@ class Evc04Device extends Homey.Device {
     if (this.client) await this.client.close();
     this._createClient(this.getSettings());
     this.controller.reset();
+    this.lastWritten = null;
     await this._start();
   }
 
@@ -158,9 +162,16 @@ class Evc04Device extends Homey.Device {
         grid: this.grid,
       });
 
-      if (decision.current !== status.currentSetpoint) {
-        this.log(`Setpoint ${status.currentSetpoint} A -> ${decision.current} A (${decision.reason})`);
+      // Write on change, and re-assert once a minute in case the charger restarted.
+      // Don't compare with the read-back value: some firmware reports 6 A after we write 0 A.
+      const changed = decision.current !== this.lastWritten;
+      if (changed || Date.now() - this.lastWriteAt > REASSERT_MS) {
+        if (changed) {
+          this.log(`Setpoint -> ${decision.current} A (${decision.reason}), charger reported ${status.currentSetpoint} A`);
+        }
         await this.client.setChargingCurrent(decision.current);
+        this.lastWritten = decision.current;
+        this.lastWriteAt = Date.now();
       }
 
       await this._publish(status, decision);
