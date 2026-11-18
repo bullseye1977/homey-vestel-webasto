@@ -49,6 +49,12 @@
   "author": {
     "name": "Wesley"
   },
+  "source": "https://github.com/bullseye1977/homey-vestel-webasto",
+  "bugs": {
+    "url": "https://github.com/bullseye1977/homey-vestel-webasto/issues"
+  },
+  "homepage": "https://github.com/bullseye1977/homey-vestel-webasto",
+  "support": "https://github.com/bullseye1977/homey-vestel-webasto/issues",
   "permissions": [],
   "flow": {
     "triggers": [
