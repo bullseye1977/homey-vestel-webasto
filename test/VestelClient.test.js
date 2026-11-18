@@ -107,3 +107,37 @@ test('reconnects after the connection drops', async () => {
     await new Promise(r => fake.server.close(r));
   }
 });
+
+test('does not hang when the charger drops the connection mid-request', async () => {
+  const net = require('net');
+  const port = 15022;
+  const { server: real } = startFakeCharger(15023);
+  await new Promise(r => real.on('initialized', r));
+
+  // Proxy that forwards to the fake charger, but kills the socket on the 3rd request.
+  let requests = 0;
+  const proxy = net.createServer(sock => {
+    const up = net.connect(15023, '127.0.0.1');
+    sock.on('data', d => {
+      requests += 1;
+      if (requests === 3) { sock.destroy(); up.destroy(); return; }
+      up.write(d);
+    });
+    up.on('data', d => sock.write(d));
+    sock.on('error', () => {}); up.on('error', () => {});
+  });
+  await new Promise(r => proxy.listen(port, '127.0.0.1', r));
+
+  const client = new VestelClient({ host: '127.0.0.1', port, timeout: 1000 });
+  try {
+    const started = Date.now();
+    await assert.rejects(client.readStatus());
+    assert.ok(Date.now() - started < 5000, 'failed fast instead of hanging');
+    // Next call reconnects and works again.
+    assert.strictEqual((await client.readStatus()).power, 7250);
+  } finally {
+    await client.close();
+    await new Promise(r => proxy.close(r));
+    await new Promise(r => real.close(r));
+  }
+});
