@@ -9,7 +9,9 @@
     "connect": "Connect",
     "no_host": "Please enter an IP address.",
     "connect_failed": "Could not reach the charger: __error__",
-    "device_name": "Charger __product__"
+    "device_name": "Charger __product__",
+    "no_answer": "Charger is reachable but does not answer Modbus requests. Is another app or device connected to it over Modbus (for example an old Modbus app or a test version of this app)? Turn that off, wait a minute and try again.",
+    "unreachable": "Charger not found at this address (__error__). Check the IP address and that the charger is on the network."
   },
   "error": {
     "no_host": "No IP address configured",

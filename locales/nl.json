@@ -9,7 +9,9 @@
     "connect": "Verbinden",
     "no_host": "Vul een IP-adres in.",
     "connect_failed": "Laadpaal niet bereikbaar: __error__",
-    "device_name": "Laadpaal __product__"
+    "device_name": "Laadpaal __product__",
+    "no_answer": "Laadpaal is bereikbaar maar beantwoordt geen Modbus-verzoeken. Is er een andere app of ander apparaat via Modbus mee verbonden (bijvoorbeeld een oude Modbus-app of een testversie van deze app)? Zet die uit, wacht een minuut en probeer het opnieuw.",
+    "unreachable": "Laadpaal niet gevonden op dit adres (__error__). Controleer het IP-adres en of de laadpaal op het netwerk zit."
   },
   "error": {
     "no_host": "Geen IP-adres ingesteld",
