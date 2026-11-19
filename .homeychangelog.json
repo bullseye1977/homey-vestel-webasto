@@ -1,0 +1,6 @@
+{
+  "1.0.0": {
+    "en": "First test version: monitor and control the Vestel EVC04 and Webasto Unite over Modbus TCP, charge modes, 1/3-phase switching and load balancing.",
+    "nl": "Eerste testversie: Vestel EVC04 en Webasto Unite uitlezen en aansturen via Modbus TCP, laadmodi, omschakelen tussen 1 en 3 fasen en capaciteitsbeveiliging."
+  }
+}
